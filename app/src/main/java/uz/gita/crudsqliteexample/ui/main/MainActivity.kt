@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
                 Snackbar.make(binding.recycler, "Removed", Snackbar.LENGTH_LONG)
                     .setAction("Undo") {
+                        myDB.saveUserData(deletedCourse)
                         list.add(position, deletedCourse)
                         adapter.notifyItemInserted(position)
                     }.show()

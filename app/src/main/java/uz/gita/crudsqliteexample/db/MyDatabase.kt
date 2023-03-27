@@ -61,6 +61,16 @@ class MyDatabase private constructor(context: Context) :
         return Integer.parseInt("$success") != -1
     }
 
+    fun updateData(user: UserData): Boolean {
+        val db = this.writableDatabase
+        val result = db.update(
+            Constants.TABLE_NAME, user.toContentValues(),
+            Constants.NAME + "=?", arrayOf(user.name)
+        ).toLong()
+        db.close()
+        return Integer.parseInt("$result") != -1
+    }
+
     fun getUser(): Cursor? {
         val p = this.writableDatabase
         return p.rawQuery("select * from ${Constants.TABLE_NAME}", null)
