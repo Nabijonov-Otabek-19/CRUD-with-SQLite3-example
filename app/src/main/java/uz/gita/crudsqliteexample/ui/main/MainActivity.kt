@@ -4,7 +4,10 @@ import android.content.Intent
 import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import uz.gita.crudsqliteexample.adapter.MyAdapter
 import uz.gita.crudsqliteexample.databinding.ActivityMainBinding
 import uz.gita.crudsqliteexample.db.MyDatabase
@@ -13,7 +16,7 @@ import uz.gita.crudsqliteexample.ui.add.AddContactActivity
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var list: ArrayList<UserData>
     private lateinit var myDB: MyDatabase
     private lateinit var adapter: MyAdapter
@@ -35,6 +38,29 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, AddContactActivity::class.java))
             }
         }
+
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val deletedCourse: UserData = list[position]
+                list.removeAt(position)
+                adapter.notifyItemRemoved(position)
+
+                Snackbar.make(binding.recycler, "Removed", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        list.add(position, deletedCourse)
+                        adapter.notifyItemInserted(position)
+                    }.show()
+            }
+        }).attachToRecyclerView(binding.recycler)
     }
 
     private fun loadUsers() {
