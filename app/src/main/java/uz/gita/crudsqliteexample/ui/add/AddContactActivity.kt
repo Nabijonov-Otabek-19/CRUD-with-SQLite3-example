@@ -9,15 +9,15 @@ import uz.gita.crudsqliteexample.model.UserData
 
 class AddContactActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityAddContactBinding
-    lateinit var myDB: MyDatabase
+    private lateinit var binding: ActivityAddContactBinding
+    private lateinit var myDB: MyDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myDB = MyDatabase(this)
+        myDB = MyDatabase.getInstance(this)
 
         binding.apply {
             btnSave.setOnClickListener {

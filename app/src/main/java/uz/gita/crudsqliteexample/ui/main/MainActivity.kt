@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myDB = MyDatabase(this)
+        myDB = MyDatabase.getInstance(this)
 
         binding.apply {
 
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val deletedCourse: UserData = list[position]
+                myDB.deleteData(list[position].name)
                 list.removeAt(position)
                 adapter.notifyItemRemoved(position)
 
@@ -67,15 +68,16 @@ class MainActivity : AppCompatActivity() {
         val cursor: Cursor? = myDB.getUser()
         list = ArrayList()
         while (cursor!!.moveToNext()) {
-            val name = cursor.getString(0)
-            val number = cursor.getString(1)
+            val name = cursor.getString(1)
+            val number = cursor.getString(2)
             list.add(UserData(name, number))
         }
+        cursor.close()
 
         binding.apply {
             adapter = MyAdapter(list)
             recycler.adapter = adapter
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemInserted(list.size)
         }
     }
 }
