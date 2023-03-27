@@ -18,15 +18,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var list: ArrayList<UserData>
-    private lateinit var myDB: MyDatabase
+    private var myDB: MyDatabase = MyDatabase.getInstance(this)
     private lateinit var adapter: MyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        myDB = MyDatabase.getInstance(this)
 
         binding.apply {
 
@@ -63,6 +61,11 @@ class MainActivity : AppCompatActivity() {
                     }.show()
             }
         }).attachToRecyclerView(binding.recycler)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUsers()
     }
 
     private fun loadUsers() {
