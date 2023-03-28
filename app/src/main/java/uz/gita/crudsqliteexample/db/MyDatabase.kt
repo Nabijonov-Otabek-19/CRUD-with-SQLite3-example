@@ -52,10 +52,10 @@ class MyDatabase private constructor(context: Context) :
         return true
     }
 
-    fun deleteData(dataName: String): Boolean {
+    fun deleteData(user: UserData): Boolean {
         val db = this.writableDatabase
         val success =
-            db.delete(Constants.TABLE_NAME, Constants.NAME + "=?", arrayOf(dataName))
+            db.delete(Constants.TABLE_NAME, "${Constants.ID} =?", arrayOf(user.id.toString()))
                 .toLong()
         db.close()
         return Integer.parseInt("$success") != -1
@@ -65,7 +65,7 @@ class MyDatabase private constructor(context: Context) :
         val db = this.writableDatabase
         val result = db.update(
             Constants.TABLE_NAME, user.toContentValues(),
-            Constants.NAME + "=?", arrayOf(user.name)
+            "${Constants.ID} =?", arrayOf(user.id.toString())
         ).toLong()
         db.close()
         return Integer.parseInt("$result") != -1

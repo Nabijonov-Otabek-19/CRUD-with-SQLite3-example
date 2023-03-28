@@ -13,6 +13,7 @@ import uz.gita.crudsqliteexample.databinding.ActivityMainBinding
 import uz.gita.crudsqliteexample.db.MyDatabase
 import uz.gita.crudsqliteexample.model.UserData
 import uz.gita.crudsqliteexample.ui.add.AddContactActivity
+import uz.gita.crudsqliteexample.ui.update.UpdateContactActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,10 +28,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.apply {
-
             recycler.layoutManager = LinearLayoutManager(this@MainActivity)
             recycler.setHasFixedSize(true)
-            loadUsers()
 
             btnAdd.setOnClickListener {
                 startActivity(Intent(this@MainActivity, AddContactActivity::class.java))
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val deletedCourse: UserData = list[position]
-                myDB.deleteData(list[position].name)
+                myDB.deleteData(list[position])
                 list.removeAt(position)
                 adapter.notifyItemRemoved(position)
 
@@ -72,9 +71,10 @@ class MainActivity : AppCompatActivity() {
         val cursor: Cursor? = myDB.getUser()
         list = ArrayList()
         while (cursor!!.moveToNext()) {
+            val id = cursor.getString(0)
             val name = cursor.getString(1)
             val number = cursor.getString(2)
-            list.add(UserData(name, number))
+            list.add(UserData(id.toInt(), name, number))
         }
         cursor.close()
 
@@ -82,6 +82,12 @@ class MainActivity : AppCompatActivity() {
             adapter = MyAdapter(list)
             recycler.adapter = adapter
             adapter.notifyItemInserted(list.size)
+        }
+
+        adapter.setOnItemClickListener {
+            val inten = Intent(this, UpdateContactActivity::class.java)
+            inten.putExtra("user", it)
+            startActivity(inten)
         }
     }
 }

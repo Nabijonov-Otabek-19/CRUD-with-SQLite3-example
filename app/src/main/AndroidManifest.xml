@@ -12,7 +12,10 @@
         android:theme="@style/Theme.CRUDSQLiteExample"
         tools:targetApi="31">
         <activity
-            android:parentActivityName=".ui.main.MainActivity"
+            android:name=".ui.update.UpdateContactActivity"
+            android:exported="false"
+            android:label="Update Contact" />
+        <activity
             android:name=".ui.add.AddContactActivity"
             android:exported="false"
             android:label="Add Contact" />

@@ -9,8 +9,20 @@ import uz.gita.crudsqliteexample.model.UserData
 class MyAdapter(val list: ArrayList<UserData>) :
     RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
+    private var onItemClick: ((UserData) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (UserData) -> Unit) {
+        onItemClick = listener
+    }
+
     inner class ViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(list[adapterPosition])
+            }
+        }
 
         fun bind(position: Int) {
             binding.apply {

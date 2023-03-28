@@ -24,7 +24,7 @@ class AddContactActivity : AppCompatActivity() {
 
                 val name = edtName.text.toString()
                 val number = edtNumber.text.toString()
-                val saveData = myDB.saveUserData(UserData(name, number))
+                val saveData = myDB.saveUserData(UserData(0, name, number))
 
                 if (edtName.text.toString().isEmpty() || edtNumber.text.toString().isEmpty()) {
                     Toast.makeText(this@AddContactActivity, "Fill data", Toast.LENGTH_SHORT).show()
